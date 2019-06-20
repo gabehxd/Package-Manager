@@ -94,18 +94,19 @@ namespace File_Manager
             setInstallLocationToolStripMenuItem.Enabled = false;
             setInstallLocationManuallyToolStripMenuItem.Enabled = true;
             statusStrip1.Visible = true;
-            
+
         }
 
-        private void InstallPackage(FileInfo pkg, DirectoryInfo InstallLocation)
+        private void InstallPackage(FileInfo pkg, DirectoryInfo Resource, DirectoryInfo InstallLocation)
         {
             Package info = JsonConvert.DeserializeObject<Package>(File.ReadAllText(pkg.FullName));
             FileInfo PackageIndex = InstallLocation.GetDirectory("FM").GetDirectory("Packages").GetFile($"{string.Concat(info.name.Without(Path.GetInvalidFileNameChars()))}.json");
             pkg.CopyTo(PackageIndex.FullName, true);
-            pkg.Directory.GetDirectory("Resource").DirectoryCopy(InstallLocation.FullName, true);
+            Resource.DirectoryCopy(InstallLocation.FullName, true);
 
             Packages.Add(info, PackageIndex);
             PopulateMenu();
+            MessageBox.Show("Package Installed!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void CreatePackageFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -144,7 +145,8 @@ namespace File_Manager
 
         private void ListView1_ItemActivate(object sender, EventArgs e)
         {
-            MessageBox.Show(listView1.Items[listView1.SelectedIndices[0]].SubItems[2].Text.Replace(" ", ""), "Files");
+            FileDisplay display = new FileDisplay(listView1.Items[listView1.SelectedIndices[0]].SubItems[2].Text);
+            display.Show();
         }
 
         private void RemoveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -156,6 +158,7 @@ namespace File_Manager
             Package.Value.Delete();
             Packages.Remove(Package.Key);
             listView1.Items.RemoveAt(listView1.SelectedIndices[0]);
+            MessageBox.Show("Package Removed!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ListView1_RightClick(object sender, MouseEventArgs e)
@@ -214,7 +217,7 @@ namespace File_Manager
             Package install;
             try
             {
-                install = JsonConvert.DeserializeObject(File.ReadAllText(pck.FullName)) as Package;
+                install = JsonConvert.DeserializeObject<Package>(File.ReadAllText(pck.FullName));
             }
             catch
             {
@@ -231,11 +234,11 @@ namespace File_Manager
             if (install.uri != null)
             {
                 WebClient wc = new WebClient();
-                FileInfo ResourceDl = new DirectoryInfo(Path.GetTempPath()).GetFile(install.uri.Segments.Last());
+                FileInfo ResourceDl = new DirectoryInfo(Path.GetTempPath()).GetDirectory("FM").GetFile(Path.GetRandomFileName());
                 if (ResourceDl.Exists) ResourceDl.Delete();
                 try
                 {
-                    wc.DownloadFile(install.uri, pck.FullName);
+                    wc.DownloadFile(install.uri, ResourceDl.FullName);
                 }
                 catch (Exception e)
                 {
@@ -243,7 +246,7 @@ namespace File_Manager
                     return;
                 }
                 ResourceDirectory = new DirectoryInfo(Path.GetTempPath()).GetDirectory("FM").GetDirectory(Path.GetRandomFileName());
-                ZipFile.ExtractToDirectory(pck.FullName, ResourceDirectory.FullName);
+                ZipFile.ExtractToDirectory(ResourceDl.FullName, ResourceDirectory.FullName);
             }
             else
             {
@@ -272,7 +275,7 @@ namespace File_Manager
                             foreach (FileInfo file in PackageFiles)
                                 file.Delete();
 
-                            InstallPackage(pck, GetCurrentDrive());
+                            InstallPackage(pck, ResourceDirectory, GetCurrentDrive());
                             Packages.Remove(Outdated);
 
                         }
@@ -300,12 +303,13 @@ namespace File_Manager
 
                 if (Conflicting.Count != 0)
                 {
-                    MessageBox.Show($"Conflicting Files: {string.Join("\n", Conflicting)}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    FileDisplay display = new FileDisplay($"{string.Join("\n", Conflicting)}", "Conflicting Files");
+                    display.Show();
                     return;
                 }
             }
 
-            InstallPackage(pck, GetCurrentDrive());
+            InstallPackage(pck, ResourceDirectory, GetCurrentDrive());
         }
 
         private void InstallFromTheInternetToolStripMenuItem_Click(object sender, EventArgs e)
