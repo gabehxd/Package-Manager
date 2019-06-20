@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace File_Manager
+namespace Package_Manager
 {
     class Package
     {

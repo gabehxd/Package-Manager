@@ -1,4 +1,4 @@
-﻿namespace File_Manager
+﻿namespace Package_Manager
 {
     partial class MainForm
     {
@@ -152,7 +152,7 @@
             // 
             // toolStripStatusLabel1
             // 
-            this.toolStripStatusLabel1.Image = global::File_Manager.Properties.Resources.red;
+            this.toolStripStatusLabel1.Image = global::Package_Manager.Properties.Resources.red;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(37, 17);
             this.toolStripStatusLabel1.Text = "SD";

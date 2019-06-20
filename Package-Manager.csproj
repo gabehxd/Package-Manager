@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{F99CEA6E-07DE-4EBE-8553-63BB2FEE45C1}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>File_Manager</RootNamespace>
-    <AssemblyName>File-Manager</AssemblyName>
+    <RootNamespace>Package_Manager</RootNamespace>
+    <AssemblyName>Package-Manager</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

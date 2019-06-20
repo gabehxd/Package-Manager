@@ -11,7 +11,7 @@ using System.IO.Compression;
 using System.Net;
 using Microsoft.VisualBasic;
 
-namespace File_Manager
+namespace Package_Manager
 {
     public partial class MainForm : Form
     {

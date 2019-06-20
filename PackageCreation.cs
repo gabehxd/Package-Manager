@@ -6,7 +6,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace File_Manager
+namespace Package_Manager
 {
     public partial class PackageCreation : Form
     {

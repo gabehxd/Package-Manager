@@ -1,4 +1,4 @@
-﻿namespace File_Manager
+﻿namespace Package_Manager
 {
     partial class FileDisplay
     {

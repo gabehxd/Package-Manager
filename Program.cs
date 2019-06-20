@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace File_Manager
+namespace Package_Manager
 {
     static class Program
     {
