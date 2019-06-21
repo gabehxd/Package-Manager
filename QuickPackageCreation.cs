@@ -11,6 +11,7 @@ namespace Package_Manager
     public partial class QuickPackageCreation : Form
     {
         public Package Pkg { get; set; }
+        public DirectoryInfo Resources { get; set; }
         private FileInfo Zip;
 
         public QuickPackageCreation(FileInfo Zip)
@@ -24,22 +25,24 @@ namespace Package_Manager
         {
             if (string.IsNullOrEmpty(PkgName.Text))
             {
-                MessageBox.Show("Error", "A package name must be declared!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("A package name must be declared!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (string.IsNullOrEmpty(Auths.Text))
             {
-                MessageBox.Show("Error", "An author must be declared!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("An author must be declared!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (string.IsNullOrEmpty(PkgVersion.Text))
             {
-                MessageBox.Show("Error", "A package version must be declared!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("A package version must be declared!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            ZipArchive archive = new ZipArchive(Zip.OpenRead(), ZipArchiveMode.Read, false);
-            Pkg = new Package(PkgName.Text, Auths.Text, DateTime.Now, PkgVersion.Text, archive.Entries.Select(ent => ent.FullName).Where(f => !f.EndsWith("/")).ToArray(), null) ;
+            DirectoryInfo Resource = new DirectoryInfo(Path.GetTempPath()).GetDirectory("FM").GetDirectory(Path.GetRandomFileName());
+            ZipFile.ExtractToDirectory(Zip.FullName, $"{Resource.FullName}{Path.DirectorySeparatorChar}{PathBox.Text}");
+            Pkg = new Package(PkgName.Text, Auths.Text, DateTime.Now, PkgVersion.Text, Resource.EnumerateFiles("*", SearchOption.AllDirectories).Select(f => f.FullName.Replace(Resource.FullName + "\\", "")).ToArray(), null);
+            Resources = Resource;
             DialogResult = DialogResult.OK;
             Close();
         }

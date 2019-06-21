@@ -35,6 +35,7 @@
             this.InstallBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.InstallZipBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.InstallWebBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.InstallZipWebBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ManualLocBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.AutoLocBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.CreatePkgBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,7 +48,6 @@
             this.Files = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Version = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PackageView = new System.Windows.Forms.ListView();
-            this.InstallZipWebBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -100,6 +100,14 @@
             this.InstallWebBtn.Size = new System.Drawing.Size(245, 22);
             this.InstallWebBtn.Text = "Install package from the internet";
             this.InstallWebBtn.Click += new System.EventHandler(this.InstallWebBtn_Click);
+            // 
+            // InstallZipWebBtn
+            // 
+            this.InstallZipWebBtn.Enabled = false;
+            this.InstallZipWebBtn.Name = "InstallZipWebBtn";
+            this.InstallZipWebBtn.Size = new System.Drawing.Size(245, 22);
+            this.InstallZipWebBtn.Text = "Install ZIP from the internet";
+            this.InstallZipWebBtn.Click += new System.EventHandler(this.InstallZipWebBtn_Click);
             // 
             // ManualLocBtn
             // 
@@ -193,13 +201,6 @@
             this.PackageView.View = System.Windows.Forms.View.Details;
             this.PackageView.ItemActivate += new System.EventHandler(this.ListView1_ItemActivate);
             this.PackageView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListView1_RightClick);
-            // 
-            // InstallZipWebBtn
-            // 
-            this.InstallZipWebBtn.Name = "InstallZipWebBtn";
-            this.InstallZipWebBtn.Size = new System.Drawing.Size(245, 22);
-            this.InstallZipWebBtn.Text = "Install ZIP from the internet";
-            this.InstallZipWebBtn.Click += new System.EventHandler(this.InstallZipWebBtn_Click);
             // 
             // MainForm
             // 

@@ -139,12 +139,14 @@ namespace Package_Manager
             StatusStrip.Visible = false;
             InstallBtn.Enabled = true;
             InstallZipBtn.Enabled = true;
+            InstallZipWebBtn.Enabled = true;
             InstallWebBtn.Enabled = true;
         }
 
         private void AutoLocBtn_Click(object sender, EventArgs e)
         {
             InstallBtn.Enabled = false;
+            InstallZipWebBtn.Enabled = false;
             InstallWebBtn.Enabled = false;
             InstallZipBtn.Enabled = false;
             Packages = new Dictionary<Package, FileInfo>();
@@ -229,8 +231,7 @@ namespace Package_Manager
                 GetCurrentDrive().GetFile(file).Delete();
 
             Package.Value.Delete();
-            Packages.Remove(Package.Key);
-            PackageView.Items.RemoveByKey(Package.Key.name);
+            PopulateMenu();
             MessageBox.Show("Package Removed!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -383,11 +384,11 @@ namespace Package_Manager
                     case -1:
                         return;
                     case 0:
-                        InstallPackage(creation.Pkg, Zip);
+                        InstallPackage(creation.Pkg, creation.Resources);
                         return;
                     case 1:
                         RemovePackage(Packages.Single(p => p.Key.name == Outdated.name));
-                        InstallPackage(creation.Pkg, Zip);
+                        InstallPackage(creation.Pkg, creation.Resources);
                         return;
                 }
             }
@@ -434,11 +435,11 @@ namespace Package_Manager
                     case -1:
                         return;
                     case 0:
-                        InstallPackage(creation.Pkg, Zip);
+                        InstallPackage(creation.Pkg, creation.Resources);
                         return;
                     case 1:
                         RemovePackage(Packages.Single(p => p.Key.name == Outdated.name));
-                        InstallPackage(creation.Pkg, Zip);
+                        InstallPackage(creation.Pkg, creation.Resources);
                         return;
                 }
             }
