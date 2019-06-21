@@ -28,11 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileDisplay));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // richTextBox1
             // 
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox1.Location = new System.Drawing.Point(12, 12);
             this.richTextBox1.MaxLength = 0;
             this.richTextBox1.Name = "richTextBox1";
@@ -48,11 +52,9 @@
             this.ClientSize = new System.Drawing.Size(400, 450);
             this.Controls.Add(this.richTextBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FileDisplay";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.Text = "Files";
             this.ResumeLayout(false);
 

@@ -1,15 +1,15 @@
-﻿using HACGUI.Services;
+﻿using HACGUI.Extensions;
+using HACGUI.Services;
+using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using HACGUI.Extensions;
-using Newtonsoft.Json;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
-using Microsoft.VisualBasic;
+using System.Windows.Forms;
 
 namespace Package_Manager
 {
@@ -18,6 +18,7 @@ namespace Package_Manager
         DirectoryInfo ManualDir;
         Dictionary<Package, FileInfo> Packages;
         PackageCreation PackageCreation = new PackageCreation();
+        FileDisplay FileDisplay;
 
         public MainForm()
         {
@@ -30,12 +31,12 @@ namespace Package_Manager
                     //item 0 is always the SD status
                     MethodInvoker inv = () =>
                     {
-                        statusStrip1.Items[0].Image = Properties.Resources.green;
+                        SdStatusStrip.Image = Properties.Resources.green;
                         PopulateMenu();
-                        installToolStripMenuItem.Enabled = true;
-                        installFromTheInternetToolStripMenuItem.Enabled = true;
-                        lockAllPackageFilesToolStripMenuItem.Enabled = true;
-                        unlockAllPackageFilesToolStripMenuItem.Enabled = true;
+                        InstallBtn.Enabled = true;
+                        InstallWebBtn.Enabled = true;
+                        LockPkgsBtn.Enabled = true;
+                        UnlockPkgsBtn.Enabled = true;
                     };
                     Invoke(inv);
                 };
@@ -43,13 +44,13 @@ namespace Package_Manager
                 {
                     MethodInvoker inv = () =>
                     {
-                        statusStrip1.Items[0].Image = Properties.Resources.red;
-                        Packages = null;
-                        listView1.Items.Clear();
-                        installToolStripMenuItem.Enabled = false;
-                        installFromTheInternetToolStripMenuItem.Enabled = false;
-                        lockAllPackageFilesToolStripMenuItem.Enabled = false;
-                        unlockAllPackageFilesToolStripMenuItem.Enabled = false;
+                        SdStatusStrip.Image = Properties.Resources.red;
+                        Packages = new Dictionary<Package, FileInfo>();
+                        PackageView.Items.Clear();
+                        InstallBtn.Enabled = false;
+                        InstallWebBtn.Enabled = false;
+                        LockPkgsBtn.Enabled = false;
+                        UnlockPkgsBtn.Enabled = false;
 
                     };
                     Invoke(inv);
@@ -58,206 +59,27 @@ namespace Package_Manager
             };
         }
 
-        private void InstallToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InstallBtn_Click(object sender, EventArgs e)
         {
-            Install();
-        }
-
-        private void SetInstallLocationManuallyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            if (dialog.ShowDialog() != DialogResult.OK) return;
-            ManualDir = new DirectoryInfo(dialog.SelectedPath);
-            Packages = new Dictionary<Package, FileInfo>();
-            listView1.Items.Clear();
-            SDService.Stop();
-            PopulateMenu();
-            setInstallLocationToolStripMenuItem.Enabled = true;
-            setInstallLocationManuallyToolStripMenuItem.Enabled = false;
-            statusStrip1.Visible = false;
-            installToolStripMenuItem.Enabled = true;
-            installFromTheInternetToolStripMenuItem.Enabled = true;
-            lockAllPackageFilesToolStripMenuItem.Enabled = true;
-            unlockAllPackageFilesToolStripMenuItem.Enabled = true;
-        }
-
-        private void SetInstallLocationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            installToolStripMenuItem.Enabled = false;
-            installFromTheInternetToolStripMenuItem.Enabled = false;
-            lockAllPackageFilesToolStripMenuItem.Enabled = false;
-            unlockAllPackageFilesToolStripMenuItem.Enabled = false;
-            Packages = new Dictionary<Package, FileInfo>();
-            listView1.Items.Clear();
-            SDService.Start();
-            ManualDir = null;
-            setInstallLocationToolStripMenuItem.Enabled = false;
-            setInstallLocationManuallyToolStripMenuItem.Enabled = true;
-            statusStrip1.Visible = true;
-
-        }
-
-        private void InstallPackage(FileInfo pkg, DirectoryInfo Resource, DirectoryInfo InstallLocation)
-        {
-            Package info = JsonConvert.DeserializeObject<Package>(File.ReadAllText(pkg.FullName));
-            FileInfo PackageIndex = InstallLocation.GetDirectory("FM").GetDirectory("Packages").GetFile($"{string.Concat(info.name.Without(Path.GetInvalidFileNameChars()))}.json");
-            pkg.CopyTo(PackageIndex.FullName, true);
-            Resource.DirectoryCopy(InstallLocation.FullName, true);
-
-            Packages.Add(info, PackageIndex);
-            PopulateMenu();
-            MessageBox.Show("Package Installed!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void CreatePackageFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (PackageCreation.IsDisposed) PackageCreation = new PackageCreation();
-            PackageCreation.Show();
-            PackageCreation.Activate();
-        }
-
-        private void PopulateMenu()
-        {
-            DirectoryInfo PackagesDirectory = GetCurrentDrive().GetDirectory("FM").GetDirectory("Packages");
-            Dictionary<Package, FileInfo> tmp = new Dictionary<Package, FileInfo>();
-            if (!PackagesDirectory.Exists)
+            FileInfo PackageFile;
+            using (OpenFileDialog PackageDialog = new OpenFileDialog
             {
-                PackagesDirectory.Create();
-                return;
-            }
-            foreach (FileInfo file in PackagesDirectory.EnumerateFiles("*.json"))
+                Filter = "Package File|*.pkg|Package Index File|Package.json|All Files|*.*",
+                Title = "Select a Package File!"
+            })
             {
-                Package pck = JsonConvert.DeserializeObject<Package>(File.ReadAllText(file.FullName));
-                if (pck != null) tmp.Add(pck, file);
-            }
-            Packages = tmp;
-
-            foreach (Package pkg in Packages.Keys)
-            {
-                string[] Item = new string[4];
-                Item[0] = pkg.name;
-                Item[1] = pkg.authors;
-                Item[2] = string.Join("\n ", pkg.files);
-                Item[3] = pkg.packageVersion.ToString();
-                listView1.Items.Add(new ListViewItem(Item));
-            }
-        }
-
-        private void ListView1_ItemActivate(object sender, EventArgs e)
-        {
-            FileDisplay display = new FileDisplay(listView1.Items[listView1.SelectedIndices[0]].SubItems[2].Text);
-            display.Show();
-        }
-
-        private void RemoveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            KeyValuePair<Package, FileInfo> Package = Packages.Single(p => p.Key.name == listView1.Items[listView1.SelectedIndices[0]].Text);
-            foreach (string file in Package.Key.files)
-                GetCurrentDrive().GetFile(file).Delete();
-
-            Package.Value.Delete();
-            Packages.Remove(Package.Key);
-            listView1.Items.RemoveAt(listView1.SelectedIndices[0]);
-            MessageBox.Show("Package Removed!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void ListView1_RightClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                if (listView1.FocusedItem.Bounds.Contains(e.Location))
-                {
-                    contextMenuStrip1.Show(Cursor.Position);
-                }
-            }
-        }
-
-        private DirectoryInfo GetCurrentDrive() => ManualDir ?? SDService.CurrentDrive.RootDirectory;
-
-        private void Install(Uri URI = null)
-        {
-            //Important Directories and Files
-            FileInfo pck;
-            if (URI == null)
-            {
-                OpenFileDialog PackageDialog = new OpenFileDialog
-                {
-                    Filter = "Package File|*.pkg|Package Index File|Package.json|All Files|*.*",
-                    Title = "Select a Package File!"
-                };
-
                 if (PackageDialog.ShowDialog() != DialogResult.OK) return;
 
-                pck = new FileInfo(PackageDialog.FileName);
-            }
-            else
-            {
-                WebClient wc = new WebClient();
-                pck = new DirectoryInfo(Path.GetTempPath()).GetFile(URI.Segments.Last());
-                if (pck.Exists) pck.Delete();
-                try
-                {
-                    wc.DownloadFile(URI, pck.FullName);
-                }
-
-                catch (Exception e)
-                {
-                    MessageBox.Show($"Download Failed: {e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                PackageFile = new FileInfo(PackageDialog.FileName);
             }
 
-            if (pck.Extension.ToLower() == ".pkg")
-            {
-                DirectoryInfo dir = new DirectoryInfo(Path.GetTempPath()).GetDirectory("FM").GetDirectory(Path.GetRandomFileName());
-                ZipFile.ExtractToDirectory(pck.FullName, dir.FullName);
-                pck = dir.GetFile("Package.json");
-            }
+            Install(PackageFile);
+        }
 
-            Package install;
-            try
-            {
-                install = JsonConvert.DeserializeObject<Package>(File.ReadAllText(pck.FullName));
-            }
-            catch
-            {
-                MessageBox.Show("Invalid package file!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (install == null)
-            {
-                MessageBox.Show("Invalid package file!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
 
-            DirectoryInfo ResourceDirectory;
-            if (install.uri != null)
-            {
-                WebClient wc = new WebClient();
-                FileInfo ResourceDl = new DirectoryInfo(Path.GetTempPath()).GetDirectory("FM").GetFile(Path.GetRandomFileName());
-                if (ResourceDl.Exists) ResourceDl.Delete();
-                try
-                {
-                    wc.DownloadFile(install.uri, ResourceDl.FullName);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show($"Download Failed: {e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                ResourceDirectory = new DirectoryInfo(Path.GetTempPath()).GetDirectory("FM").GetDirectory(Path.GetRandomFileName());
-                ZipFile.ExtractToDirectory(ResourceDl.FullName, ResourceDirectory.FullName);
-            }
-            else
-            {
-                ResourceDirectory = pck.Directory.GetDirectory("Resource");
-                if (!ResourceDirectory.Exists)
-                {
-                    MessageBox.Show("Resource folder does not exist!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
-
+        private int CheckPackages(Package install, out Package data)
+        {
+            data = null;
             DirectoryInfo PackagesFolder = GetCurrentDrive().GetDirectory("FM").GetDirectory("Packages");
 
             if (PackagesFolder.Exists)
@@ -270,21 +92,15 @@ namespace Package_Manager
                     {
                         if (MessageBox.Show("The package you are trying to install is different from one already installed, would you like to use the new package?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                         {
-                            IEnumerable<FileInfo> PackageFiles = Outdated.files.Select(f => new FileInfo(Path.Combine(GetCurrentDrive().FullName, f)));
-
-                            foreach (FileInfo file in PackageFiles)
-                                file.Delete();
-
-                            InstallPackage(pck, ResourceDirectory, GetCurrentDrive());
-                            Packages.Remove(Outdated);
-
+                            data = Outdated;
+                            return 1;
                         }
-                        else return;
+                        else return -1;
                     }
                     else
                     {
                         MessageBox.Show("The package you are trying to install is already installed!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
+                        return -1;
                     }
 
                 }
@@ -303,16 +119,218 @@ namespace Package_Manager
 
                 if (Conflicting.Count != 0)
                 {
-                    FileDisplay display = new FileDisplay($"{string.Join("\n", Conflicting)}", "Conflicting Files");
-                    display.Show();
+                    using (FileDisplay display = new FileDisplay($"{string.Join("\n", Conflicting)}", "Conflicting Files"))
+                    {
+                        display.Show();
+                    }
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        private void ManualLocBtn_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            if (dialog.ShowDialog() != DialogResult.OK) return;
+            ManualDir = new DirectoryInfo(dialog.SelectedPath);
+            Packages = new Dictionary<Package, FileInfo>();
+            PackageView.Items.Clear();
+            SDService.Stop();
+            PopulateMenu();
+            AutoLocBtn.Enabled = true;
+            ManualLocBtn.Enabled = false;
+            StatusStrip.Visible = false;
+            InstallBtn.Enabled = true;
+            InstallZipBtn.Enabled = true;
+            InstallWebBtn.Enabled = true;
+            LockPkgsBtn.Enabled = true;
+            UnlockPkgsBtn.Enabled = true;
+        }
+
+        private void AutoLocBtn_Click(object sender, EventArgs e)
+        {
+            InstallBtn.Enabled = false;
+            InstallWebBtn.Enabled = false;
+            InstallZipBtn.Enabled = false;
+            LockPkgsBtn.Enabled = false;
+            UnlockPkgsBtn.Enabled = false;
+            Packages = new Dictionary<Package, FileInfo>();
+            PackageView.Items.Clear();
+            SDService.Start();
+            ManualDir = null;
+            AutoLocBtn.Enabled = false;
+            ManualLocBtn.Enabled = true;
+            StatusStrip.Visible = true;
+
+        }
+
+        private void InstallPackage(Package pkg, DirectoryInfo Resource)
+        {
+            FileInfo PackageIndex = GetCurrentDrive().GetDirectory("FM").GetDirectory("Packages").GetFile($"{string.Concat(pkg.name.Without(Path.GetInvalidFileNameChars()))}.json");
+            PackageIndex.WriteAllText(JsonConvert.SerializeObject(pkg));
+            Resource.DirectoryCopy(GetCurrentDrive().FullName, true);
+
+            Packages.Add(pkg, PackageIndex);
+            PopulateMenu();
+            MessageBox.Show("Package Installed!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        private void InstallPackage(Package pkg, FileInfo Resource)
+        {
+            FileInfo PackageIndex = GetCurrentDrive().GetDirectory("FM").GetDirectory("Packages").GetFile($"{string.Concat(pkg.name.Without(Path.GetInvalidFileNameChars()))}.json");
+            PackageIndex.WriteAllText(JsonConvert.SerializeObject(pkg));
+            ZipFile.ExtractToDirectory(Resource.FullName, GetCurrentDrive().FullName);
+            Packages.Add(pkg, PackageIndex);
+            PopulateMenu();
+            MessageBox.Show("Package Installed!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
+        private void CreatePkgBtn_Click(object sender, EventArgs e)
+        {
+            if (PackageCreation.IsDisposed) PackageCreation = new PackageCreation();
+            PackageCreation.Show();
+            PackageCreation.Activate();
+        }
+
+        private void PopulateMenu()
+        {
+            DirectoryInfo PackagesDirectory = GetCurrentDrive().GetDirectory("FM").GetDirectory("Packages");
+            Dictionary<Package, FileInfo> tmp = new Dictionary<Package, FileInfo>();
+            if (!PackagesDirectory.Exists)
+            {
+                PackagesDirectory.Create();
+                return;
+            }
+            foreach (FileInfo file in PackagesDirectory.EnumerateFiles("*.json"))
+            {
+                Package pck = JsonConvert.DeserializeObject<Package>(file.ReadAllText());
+                if (pck != null) tmp.Add(pck, file);
+            }
+            Packages = tmp;
+
+            foreach (Package pkg in Packages.Keys)
+            {
+                string[] Item = new string[4];
+                Item[0] = pkg.name;
+                Item[1] = pkg.authors;
+                Item[2] = string.Join("\n ", pkg.files);
+                Item[3] = pkg.packageVersion.ToString();
+                PackageView.Items.Add(new ListViewItem(Item));
+            }
+        }
+
+        private void ListView1_ItemActivate(object sender, EventArgs e)
+        {
+            if (FileDisplay == null || FileDisplay.IsDisposed) FileDisplay = new FileDisplay(PackageView.Items[PackageView.SelectedIndices[0]].SubItems[2].Text.Replace("\n ", "\n"));
+            FileDisplay.Show();
+            FileDisplay.Activate();
+        }
+
+        private void RemoveToolStripMenuItem_Click(object sender, EventArgs e) => RemovePackage(Packages.Single(p => p.Key.name == PackageView.Items[PackageView.SelectedIndices[0]].Text));
+
+        private void RemovePackage(KeyValuePair<Package, FileInfo> Package)
+        {
+            foreach (string file in Package.Key.files)
+                GetCurrentDrive().GetFile(file).Delete();
+
+            Package.Value.Delete();
+            Packages.Remove(Package.Key);
+            PackageView.Items.RemoveAt(PackageView.SelectedIndices[0]);
+            MessageBox.Show("Package Removed!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void ListView1_RightClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (PackageView.FocusedItem.Bounds.Contains(e.Location))
+                {
+                    contextMenuStrip1.Show(Cursor.Position);
+                }
+            }
+        }
+
+        private void Install(FileInfo PackageFile)
+        {
+            if (PackageFile.Extension.ToLower() == ".pkg")
+            {
+                DirectoryInfo dir = new DirectoryInfo(Path.GetTempPath()).GetDirectory("FM").GetDirectory(Path.GetRandomFileName());
+                ZipFile.ExtractToDirectory(PackageFile.FullName, dir.FullName);
+                PackageFile = dir.GetFile("Package.json");
+            }
+
+            Package Pkg;
+            try
+            {
+                Pkg = JsonConvert.DeserializeObject<Package>(PackageFile.ReadAllText());
+            }
+            catch
+            {
+                MessageBox.Show("Invalid package file!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DirectoryInfo ResourceDirectory;
+            if (Pkg.uri != null)
+            {
+                FileInfo ResourceDl;
+                using (WebClient wc = new WebClient())
+                {
+                    ResourceDl = new DirectoryInfo(Path.GetTempPath()).GetDirectory("FM").GetFile(Path.GetRandomFileName());
+                    if (ResourceDl.Exists) ResourceDl.Delete();
+                    try
+                    {
+                        wc.DownloadFile(Pkg.uri, ResourceDl.FullName);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Download Failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+
+                switch (CheckPackages(Pkg, out Package Outdated))
+                {
+                    default:
+                    case -1:
+                        return;
+                    case 0:
+                        InstallPackage(Pkg, ResourceDl);
+                        return;
+                    case 1:
+                        RemovePackage(Packages.Single(p => p.Key.name == Outdated.name));
+                        InstallPackage(Pkg, ResourceDl);
+                        return;
+                }
+            }
+            else
+            {
+                ResourceDirectory = PackageFile.Directory.GetDirectory("Resource");
+                if (!ResourceDirectory.Exists)
+                {
+                    MessageBox.Show("Resource folder does not exist!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
 
-            InstallPackage(pck, ResourceDirectory, GetCurrentDrive());
+            switch (CheckPackages(Pkg, out Package dated))
+            {
+                case -1:
+                    return;
+                case 0:
+                    InstallPackage(Pkg, ResourceDirectory);
+                    break;
+                case 1:
+                    RemovePackage(Packages.Single(p => p.Key.name == dated.name));
+                    InstallPackage(Pkg, ResourceDirectory);
+                    break;
+            }
         }
 
-        private void InstallFromTheInternetToolStripMenuItem_Click(object sender, EventArgs e)
+        private DirectoryInfo GetCurrentDrive() => ManualDir ?? SDService.CurrentDrive.RootDirectory;
+
+        private void InstallWebBtn_Click(object sender, EventArgs e)
         {
 
             string input = Interaction.InputBox("Input URL");
@@ -327,10 +345,27 @@ namespace Package_Manager
                 MessageBox.Show("Invalid URL", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            Install(uri);
+
+            FileInfo PackageFile;
+            using (WebClient wc = new WebClient())
+            {
+                PackageFile = new DirectoryInfo(Path.GetTempPath()).GetFile(uri.Segments.Last());
+                if (PackageFile.Exists) PackageFile.Delete();
+                try
+                {
+                    wc.DownloadFile(uri, PackageFile.FullName);
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Download Failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            Install(PackageFile);
         }
 
-        private void LockAllPackageFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LockPkgsBtn_Click(object sender, EventArgs e)
         {
             foreach (Package p in Packages.Keys)
                 foreach (string file in p.files)
@@ -340,7 +375,7 @@ namespace Package_Manager
                 file.IsReadOnly = true;
         }
 
-        private void UnlockAllPackageFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UnlockPkgsBtn_Click(object sender, EventArgs e)
         {
             foreach (Package p in Packages.Keys)
                 foreach (string file in p.files)
@@ -348,6 +383,40 @@ namespace Package_Manager
 
             foreach (FileInfo file in Packages.Values)
                 file.IsReadOnly = false;
+        }
+
+        private void InstallZipBtn_Click(object sender, EventArgs e)
+        {
+            FileInfo Zip;
+            using (OpenFileDialog PackageDialog = new OpenFileDialog
+            {
+                Filter = "Zip File|*.zip|All Files|*.*",
+                Title = "Select a Zip File!"
+            })
+            {
+                if (PackageDialog.ShowDialog() != DialogResult.OK) return;
+
+                Zip = new FileInfo(PackageDialog.FileName);
+            }
+
+            using (QuickPackageCreation creation = new QuickPackageCreation(Zip))
+            {
+                if (creation.ShowDialog() != DialogResult.OK) return;
+
+                switch (CheckPackages(creation.Pkg, out Package Outdated))
+                {
+                    default:
+                    case -1:
+                        return;
+                    case 0:
+                        InstallPackage(creation.Pkg, Zip);
+                        return;
+                    case 1:
+                        RemovePackage(Packages.Single(p => p.Key.name == Outdated.name));
+                        InstallPackage(creation.Pkg, Zip);
+                        return;
+                }
+            }
         }
     }
 }

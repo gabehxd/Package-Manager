@@ -10,8 +10,6 @@ namespace Package_Manager
 {
     public partial class PackageCreation : Form
     {
-        private DirectoryInfo Resource;
-
         public PackageCreation()
         {
             InitializeComponent();
@@ -22,7 +20,7 @@ namespace Package_Manager
             FolderBrowserDialog fbrower = new FolderBrowserDialog();
             if (fbrower.ShowDialog() == DialogResult.OK)
             {
-                Resource = new DirectoryInfo(fbrower.SelectedPath);
+                ResourceFolderBox.Text = fbrower.SelectedPath;
             }
         }
 
@@ -33,9 +31,36 @@ namespace Package_Manager
                 MessageBox.Show("Error", "A package name must be declared!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            if (string.IsNullOrEmpty(PkgVersion.Text))
+            {
+                MessageBox.Show("Error", "A package version must be declared!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             if (string.IsNullOrEmpty(Auths.Text))
             {
                 MessageBox.Show("Error", "An author must be declared!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(ResourceFolderBox.Text))
+            {
+                MessageBox.Show("Error", "Resource folder must be declared!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            DirectoryInfo Resource;
+            try
+            {
+                Resource = new DirectoryInfo(ResourceFolderBox.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Error", "Invalid resource path!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!Resource.Exists)
+            {
+                MessageBox.Show("Error", "Resource folder does not exist!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

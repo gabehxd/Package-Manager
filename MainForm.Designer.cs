@@ -32,25 +32,26 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.packageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.installToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.installFromTheInternetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setInstallLocationManuallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setInstallLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createPackageFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InstallBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.InstallZipBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.InstallWebBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ManualLocBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.AutoLocBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.CreatePkgBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.miscToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lockAllPackageFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.unlockAllPackageFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.LockPkgsBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.UnlockPkgsBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.StatusStrip = new System.Windows.Forms.StatusStrip();
+            this.SdStatusStrip = new System.Windows.Forms.ToolStripStatusLabel();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PackName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Author = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Files = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Version = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.PackageView = new System.Windows.Forms.ListView();
             this.menuStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.StatusStrip.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,94 +69,103 @@
             // packageToolStripMenuItem
             // 
             this.packageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.installToolStripMenuItem,
-            this.installFromTheInternetToolStripMenuItem,
-            this.setInstallLocationManuallyToolStripMenuItem,
-            this.setInstallLocationToolStripMenuItem,
-            this.createPackageFileToolStripMenuItem});
+            this.InstallBtn,
+            this.InstallZipBtn,
+            this.InstallWebBtn,
+            this.ManualLocBtn,
+            this.AutoLocBtn,
+            this.CreatePkgBtn});
             this.packageToolStripMenuItem.Name = "packageToolStripMenuItem";
             this.packageToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
             this.packageToolStripMenuItem.Text = "Package";
             // 
-            // installToolStripMenuItem
+            // InstallBtn
             // 
-            this.installToolStripMenuItem.Enabled = false;
-            this.installToolStripMenuItem.Name = "installToolStripMenuItem";
-            this.installToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.installToolStripMenuItem.Text = "Install";
-            this.installToolStripMenuItem.Click += new System.EventHandler(this.InstallToolStripMenuItem_Click);
+            this.InstallBtn.Enabled = false;
+            this.InstallBtn.Name = "InstallBtn";
+            this.InstallBtn.Size = new System.Drawing.Size(245, 22);
+            this.InstallBtn.Text = "Install";
+            this.InstallBtn.Click += new System.EventHandler(this.InstallBtn_Click);
             // 
-            // installFromTheInternetToolStripMenuItem
+            // InstallZipBtn
             // 
-            this.installFromTheInternetToolStripMenuItem.Enabled = false;
-            this.installFromTheInternetToolStripMenuItem.Name = "installFromTheInternetToolStripMenuItem";
-            this.installFromTheInternetToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.installFromTheInternetToolStripMenuItem.Text = "Install from the internet";
-            this.installFromTheInternetToolStripMenuItem.Click += new System.EventHandler(this.InstallFromTheInternetToolStripMenuItem_Click);
+            this.InstallZipBtn.Enabled = false;
+            this.InstallZipBtn.Name = "InstallZipBtn";
+            this.InstallZipBtn.Size = new System.Drawing.Size(245, 22);
+            this.InstallZipBtn.Text = "Install from ZIP file";
+            this.InstallZipBtn.Click += new System.EventHandler(this.InstallZipBtn_Click);
             // 
-            // setInstallLocationManuallyToolStripMenuItem
+            // InstallWebBtn
             // 
-            this.setInstallLocationManuallyToolStripMenuItem.Name = "setInstallLocationManuallyToolStripMenuItem";
-            this.setInstallLocationManuallyToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.setInstallLocationManuallyToolStripMenuItem.Text = "Set install location manually";
-            this.setInstallLocationManuallyToolStripMenuItem.Click += new System.EventHandler(this.SetInstallLocationManuallyToolStripMenuItem_Click);
+            this.InstallWebBtn.Enabled = false;
+            this.InstallWebBtn.Name = "InstallWebBtn";
+            this.InstallWebBtn.Size = new System.Drawing.Size(245, 22);
+            this.InstallWebBtn.Text = "Install package from the internet";
+            this.InstallWebBtn.Click += new System.EventHandler(this.InstallWebBtn_Click);
             // 
-            // setInstallLocationToolStripMenuItem
+            // ManualLocBtn
             // 
-            this.setInstallLocationToolStripMenuItem.Enabled = false;
-            this.setInstallLocationToolStripMenuItem.Name = "setInstallLocationToolStripMenuItem";
-            this.setInstallLocationToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.setInstallLocationToolStripMenuItem.Text = "Set install location automatically";
-            this.setInstallLocationToolStripMenuItem.Click += new System.EventHandler(this.SetInstallLocationToolStripMenuItem_Click);
+            this.ManualLocBtn.Name = "ManualLocBtn";
+            this.ManualLocBtn.Size = new System.Drawing.Size(245, 22);
+            this.ManualLocBtn.Text = "Set install location manually";
+            this.ManualLocBtn.Click += new System.EventHandler(this.ManualLocBtn_Click);
             // 
-            // createPackageFileToolStripMenuItem
+            // AutoLocBtn
             // 
-            this.createPackageFileToolStripMenuItem.Name = "createPackageFileToolStripMenuItem";
-            this.createPackageFileToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.createPackageFileToolStripMenuItem.Text = "Create package file";
-            this.createPackageFileToolStripMenuItem.Click += new System.EventHandler(this.CreatePackageFileToolStripMenuItem_Click);
+            this.AutoLocBtn.Enabled = false;
+            this.AutoLocBtn.Name = "AutoLocBtn";
+            this.AutoLocBtn.Size = new System.Drawing.Size(245, 22);
+            this.AutoLocBtn.Text = "Set install location automatically";
+            this.AutoLocBtn.Click += new System.EventHandler(this.AutoLocBtn_Click);
+            // 
+            // CreatePkgBtn
+            // 
+            this.CreatePkgBtn.Name = "CreatePkgBtn";
+            this.CreatePkgBtn.Size = new System.Drawing.Size(245, 22);
+            this.CreatePkgBtn.Text = "Create package file";
+            this.CreatePkgBtn.Click += new System.EventHandler(this.CreatePkgBtn_Click);
             // 
             // miscToolStripMenuItem
             // 
             this.miscToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lockAllPackageFilesToolStripMenuItem,
-            this.unlockAllPackageFilesToolStripMenuItem});
+            this.LockPkgsBtn,
+            this.UnlockPkgsBtn});
             this.miscToolStripMenuItem.Name = "miscToolStripMenuItem";
             this.miscToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.miscToolStripMenuItem.Text = "Misc.";
             // 
-            // lockAllPackageFilesToolStripMenuItem
+            // LockPkgsBtn
             // 
-            this.lockAllPackageFilesToolStripMenuItem.Enabled = false;
-            this.lockAllPackageFilesToolStripMenuItem.Name = "lockAllPackageFilesToolStripMenuItem";
-            this.lockAllPackageFilesToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.lockAllPackageFilesToolStripMenuItem.Text = "Lock all package files";
-            this.lockAllPackageFilesToolStripMenuItem.Click += new System.EventHandler(this.LockAllPackageFilesToolStripMenuItem_Click);
+            this.LockPkgsBtn.Enabled = false;
+            this.LockPkgsBtn.Name = "LockPkgsBtn";
+            this.LockPkgsBtn.Size = new System.Drawing.Size(197, 22);
+            this.LockPkgsBtn.Text = "Lock all package files";
+            this.LockPkgsBtn.Click += new System.EventHandler(this.LockPkgsBtn_Click);
             // 
-            // unlockAllPackageFilesToolStripMenuItem
+            // UnlockPkgsBtn
             // 
-            this.unlockAllPackageFilesToolStripMenuItem.Enabled = false;
-            this.unlockAllPackageFilesToolStripMenuItem.Name = "unlockAllPackageFilesToolStripMenuItem";
-            this.unlockAllPackageFilesToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.unlockAllPackageFilesToolStripMenuItem.Text = "Unlock all package files";
-            this.unlockAllPackageFilesToolStripMenuItem.Click += new System.EventHandler(this.UnlockAllPackageFilesToolStripMenuItem_Click);
+            this.UnlockPkgsBtn.Enabled = false;
+            this.UnlockPkgsBtn.Name = "UnlockPkgsBtn";
+            this.UnlockPkgsBtn.Size = new System.Drawing.Size(197, 22);
+            this.UnlockPkgsBtn.Text = "Unlock all package files";
+            this.UnlockPkgsBtn.Click += new System.EventHandler(this.UnlockPkgsBtn_Click);
             // 
-            // statusStrip1
+            // StatusStrip
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 428);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
+            this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SdStatusStrip});
+            this.StatusStrip.Location = new System.Drawing.Point(0, 428);
+            this.StatusStrip.Name = "StatusStrip";
+            this.StatusStrip.Size = new System.Drawing.Size(800, 22);
+            this.StatusStrip.TabIndex = 2;
+            this.StatusStrip.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel1
+            // SdStatusStrip
             // 
-            this.toolStripStatusLabel1.Image = global::Package_Manager.Properties.Resources.red;
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(37, 17);
-            this.toolStripStatusLabel1.Text = "SD";
+            this.SdStatusStrip.Image = global::Package_Manager.Properties.Resources.red;
+            this.SdStatusStrip.Name = "SdStatusStrip";
+            this.SdStatusStrip.Size = new System.Drawing.Size(37, 17);
+            this.SdStatusStrip.Text = "SD";
             // 
             // contextMenuStrip1
             // 
@@ -191,33 +201,33 @@
             this.Version.Text = "Package Version";
             this.Version.Width = 180;
             // 
-            // listView1
+            // PackageView
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.PackageView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.PackageView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.PackName,
             this.Author,
             this.Files,
             this.Version});
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 46);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(776, 359);
-            this.listView1.TabIndex = 1;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.ItemActivate += new System.EventHandler(this.ListView1_ItemActivate);
-            this.listView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListView1_RightClick);
+            this.PackageView.HideSelection = false;
+            this.PackageView.Location = new System.Drawing.Point(12, 46);
+            this.PackageView.Name = "PackageView";
+            this.PackageView.Size = new System.Drawing.Size(776, 359);
+            this.PackageView.TabIndex = 1;
+            this.PackageView.UseCompatibleStateImageBehavior = false;
+            this.PackageView.View = System.Windows.Forms.View.Details;
+            this.PackageView.ItemActivate += new System.EventHandler(this.ListView1_ItemActivate);
+            this.PackageView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListView1_RightClick);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.StatusStrip);
+            this.Controls.Add(this.PackageView);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -225,8 +235,8 @@
             this.Text = "File Manager";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.StatusStrip.ResumeLayout(false);
+            this.StatusStrip.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -237,23 +247,24 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem packageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem installToolStripMenuItem;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripMenuItem setInstallLocationManuallyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setInstallLocationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem createPackageFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem InstallBtn;
+        private System.Windows.Forms.StatusStrip StatusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel SdStatusStrip;
+        private System.Windows.Forms.ToolStripMenuItem ManualLocBtn;
+        private System.Windows.Forms.ToolStripMenuItem AutoLocBtn;
+        private System.Windows.Forms.ToolStripMenuItem CreatePkgBtn;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem installFromTheInternetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem InstallWebBtn;
         private System.Windows.Forms.ToolStripMenuItem miscToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem lockAllPackageFilesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem unlockAllPackageFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem LockPkgsBtn;
+        private System.Windows.Forms.ToolStripMenuItem UnlockPkgsBtn;
         private System.Windows.Forms.ColumnHeader PackName;
         private System.Windows.Forms.ColumnHeader Author;
         private System.Windows.Forms.ColumnHeader Files;
         private System.Windows.Forms.ColumnHeader Version;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView PackageView;
+        private System.Windows.Forms.ToolStripMenuItem InstallZipBtn;
     }
 }
 

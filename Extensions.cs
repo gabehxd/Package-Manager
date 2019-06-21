@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 
 namespace HACGUI.Extensions
@@ -9,25 +8,13 @@ namespace HACGUI.Extensions
     public static class Extensions
     {
 
-        public static FileInfo GetFile(this DirectoryInfo obj, string filename)
-        {
-            return new FileInfo($"{obj.FullName}{Path.DirectorySeparatorChar}{filename}");
-        }
+        public static FileInfo GetFile(this DirectoryInfo obj, string filename) => new FileInfo($"{obj.FullName}{Path.DirectorySeparatorChar}{filename}");
 
-        public static bool ContainsFile(this DirectoryInfo obj, string filename)
-        {
-            return obj.GetFile(filename).Exists;
-        }
+        public static bool ContainsFile(this DirectoryInfo obj, string filename) => obj.GetFile(filename).Exists;
 
-        public static DirectoryInfo GetDirectory(this DirectoryInfo obj, string foldername)
-        {
-            return new DirectoryInfo($"{obj.FullName}{Path.DirectorySeparatorChar}{foldername.Replace('/', Path.DirectorySeparatorChar)}");
-        }
+        public static DirectoryInfo GetDirectory(this DirectoryInfo obj, string foldername) => new DirectoryInfo($"{obj.FullName}{Path.DirectorySeparatorChar}{foldername.Replace('/', Path.DirectorySeparatorChar)}");
 
-        public static FileInfo FindFile(this DirectoryInfo root, string filename, SearchOption option = SearchOption.AllDirectories)
-        {
-            return root.FindFiles(new string[] { filename }, option)[0];
-        }
+        public static FileInfo FindFile(this DirectoryInfo root, string filename, SearchOption option = SearchOption.AllDirectories) => root.FindFiles(new string[] { filename }, option)[0];
 
         public static FileInfo[] FindFiles(this DirectoryInfo root, string[] filenames, SearchOption option = SearchOption.AllDirectories)
         {
@@ -90,9 +77,12 @@ namespace HACGUI.Extensions
             }
         }
 
-        public static IEnumerable<T> Without<T>(this IEnumerable<T> a, IEnumerable<T> b)
-        {
-            return a.Where(i => !b.Contains(i));
-        }
+        public static IEnumerable<T> Without<T>(this IEnumerable<T> a, IEnumerable<T> b) => a.Where(i => !b.Contains(i));
+
+        public static string ReadAllText(this FileInfo file) => File.ReadAllText(file.FullName);
+
+        public static string GetFileNameWithoutExtension(this FileInfo file) => file.Name.Replace(file.Extension, "");
+
+        public static void WriteAllText(this FileInfo file, string contents) => File.WriteAllText(file.FullName, contents);
     }
 }

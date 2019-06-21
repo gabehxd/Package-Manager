@@ -2,7 +2,7 @@
 
 namespace Package_Manager
 {
-    class Package
+    public class Package
     {
         public string name;
         public string authors;

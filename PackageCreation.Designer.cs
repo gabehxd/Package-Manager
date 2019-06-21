@@ -43,13 +43,15 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.UrlBox = new System.Windows.Forms.TextBox();
+            this.ResourceFolderBox = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Auths
             // 
             this.Auths.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Auths.Location = new System.Drawing.Point(110, 113);
+            this.Auths.Location = new System.Drawing.Point(110, 108);
             this.Auths.Name = "Auths";
             this.Auths.Size = new System.Drawing.Size(100, 20);
             this.Auths.TabIndex = 0;
@@ -58,7 +60,7 @@
             // 
             this.PkgName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.PkgName.Location = new System.Drawing.Point(110, 60);
+            this.PkgName.Location = new System.Drawing.Point(110, 55);
             this.PkgName.Name = "PkgName";
             this.PkgName.Size = new System.Drawing.Size(100, 20);
             this.PkgName.TabIndex = 1;
@@ -67,7 +69,7 @@
             // 
             this.SelectFilesbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SelectFilesbtn.Location = new System.Drawing.Point(123, 302);
+            this.SelectFilesbtn.Location = new System.Drawing.Point(123, 337);
             this.SelectFilesbtn.Name = "SelectFilesbtn";
             this.SelectFilesbtn.Size = new System.Drawing.Size(75, 23);
             this.SelectFilesbtn.TabIndex = 2;
@@ -79,7 +81,7 @@
             // 
             this.Createbtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Createbtn.Location = new System.Drawing.Point(110, 335);
+            this.Createbtn.Location = new System.Drawing.Point(110, 388);
             this.Createbtn.Name = "Createbtn";
             this.Createbtn.Size = new System.Drawing.Size(100, 23);
             this.Createbtn.TabIndex = 3;
@@ -92,7 +94,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(120, 37);
+            this.label1.Location = new System.Drawing.Point(120, 32);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 13);
             this.label1.TabIndex = 4;
@@ -103,7 +105,7 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(139, 90);
+            this.label2.Location = new System.Drawing.Point(139, 85);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(43, 13);
             this.label2.TabIndex = 5;
@@ -114,7 +116,7 @@
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(139, 143);
+            this.label3.Location = new System.Drawing.Point(139, 138);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 13);
             this.label3.TabIndex = 7;
@@ -124,7 +126,7 @@
             // 
             this.PkgVersion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.PkgVersion.Location = new System.Drawing.Point(110, 166);
+            this.PkgVersion.Location = new System.Drawing.Point(110, 161);
             this.PkgVersion.Name = "PkgVersion";
             this.PkgVersion.Size = new System.Drawing.Size(100, 20);
             this.PkgVersion.TabIndex = 6;
@@ -134,7 +136,7 @@
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(132, 189);
+            this.label4.Location = new System.Drawing.Point(132, 184);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(56, 13);
             this.label4.TabIndex = 9;
@@ -145,7 +147,7 @@
             // 
             this.PathBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.PathBox.Location = new System.Drawing.Point(110, 212);
+            this.PathBox.Location = new System.Drawing.Point(110, 207);
             this.PathBox.Name = "PathBox";
             this.PathBox.Size = new System.Drawing.Size(100, 20);
             this.PathBox.TabIndex = 8;
@@ -155,7 +157,7 @@
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(101, 242);
+            this.checkBox1.Location = new System.Drawing.Point(101, 237);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(119, 17);
             this.checkBox1.TabIndex = 10;
@@ -168,16 +170,38 @@
             this.UrlBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.UrlBox.Enabled = false;
-            this.UrlBox.Location = new System.Drawing.Point(110, 267);
+            this.UrlBox.Location = new System.Drawing.Point(110, 262);
             this.UrlBox.Name = "UrlBox";
             this.UrlBox.Size = new System.Drawing.Size(100, 20);
             this.UrlBox.TabIndex = 11;
+            // 
+            // ResourceFolderBox
+            // 
+            this.ResourceFolderBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ResourceFolderBox.Location = new System.Drawing.Point(86, 311);
+            this.ResourceFolderBox.Name = "ResourceFolderBox";
+            this.ResourceFolderBox.Size = new System.Drawing.Size(153, 20);
+            this.ResourceFolderBox.TabIndex = 12;
+            // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(118, 295);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(85, 13);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Resource Folder";
             // 
             // PackageCreation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(321, 395);
+            this.ClientSize = new System.Drawing.Size(321, 443);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.ResourceFolderBox);
             this.Controls.Add(this.UrlBox);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label4);
@@ -193,7 +217,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(337, 434);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(337, 434);
             this.Name = "PackageCreation";
@@ -218,5 +241,7 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.TextBox UrlBox;
+        private System.Windows.Forms.TextBox ResourceFolderBox;
+        private System.Windows.Forms.Label label5;
     }
 }
