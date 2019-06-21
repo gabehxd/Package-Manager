@@ -38,9 +38,6 @@
             this.ManualLocBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.AutoLocBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.CreatePkgBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.miscToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.LockPkgsBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.UnlockPkgsBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.SdStatusStrip = new System.Windows.Forms.ToolStripStatusLabel();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -50,6 +47,7 @@
             this.Files = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Version = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PackageView = new System.Windows.Forms.ListView();
+            this.InstallZipWebBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.StatusStrip.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -58,8 +56,7 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.packageToolStripMenuItem,
-            this.miscToolStripMenuItem});
+            this.packageToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -72,6 +69,7 @@
             this.InstallBtn,
             this.InstallZipBtn,
             this.InstallWebBtn,
+            this.InstallZipWebBtn,
             this.ManualLocBtn,
             this.AutoLocBtn,
             this.CreatePkgBtn});
@@ -124,31 +122,6 @@
             this.CreatePkgBtn.Size = new System.Drawing.Size(245, 22);
             this.CreatePkgBtn.Text = "Create package file";
             this.CreatePkgBtn.Click += new System.EventHandler(this.CreatePkgBtn_Click);
-            // 
-            // miscToolStripMenuItem
-            // 
-            this.miscToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.LockPkgsBtn,
-            this.UnlockPkgsBtn});
-            this.miscToolStripMenuItem.Name = "miscToolStripMenuItem";
-            this.miscToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.miscToolStripMenuItem.Text = "Misc.";
-            // 
-            // LockPkgsBtn
-            // 
-            this.LockPkgsBtn.Enabled = false;
-            this.LockPkgsBtn.Name = "LockPkgsBtn";
-            this.LockPkgsBtn.Size = new System.Drawing.Size(197, 22);
-            this.LockPkgsBtn.Text = "Lock all package files";
-            this.LockPkgsBtn.Click += new System.EventHandler(this.LockPkgsBtn_Click);
-            // 
-            // UnlockPkgsBtn
-            // 
-            this.UnlockPkgsBtn.Enabled = false;
-            this.UnlockPkgsBtn.Name = "UnlockPkgsBtn";
-            this.UnlockPkgsBtn.Size = new System.Drawing.Size(197, 22);
-            this.UnlockPkgsBtn.Text = "Unlock all package files";
-            this.UnlockPkgsBtn.Click += new System.EventHandler(this.UnlockPkgsBtn_Click);
             // 
             // StatusStrip
             // 
@@ -221,6 +194,13 @@
             this.PackageView.ItemActivate += new System.EventHandler(this.ListView1_ItemActivate);
             this.PackageView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListView1_RightClick);
             // 
+            // InstallZipWebBtn
+            // 
+            this.InstallZipWebBtn.Name = "InstallZipWebBtn";
+            this.InstallZipWebBtn.Size = new System.Drawing.Size(245, 22);
+            this.InstallZipWebBtn.Text = "Install ZIP from the internet";
+            this.InstallZipWebBtn.Click += new System.EventHandler(this.InstallZipWebBtn_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -256,15 +236,13 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem InstallWebBtn;
-        private System.Windows.Forms.ToolStripMenuItem miscToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem LockPkgsBtn;
-        private System.Windows.Forms.ToolStripMenuItem UnlockPkgsBtn;
         private System.Windows.Forms.ColumnHeader PackName;
         private System.Windows.Forms.ColumnHeader Author;
         private System.Windows.Forms.ColumnHeader Files;
         private System.Windows.Forms.ColumnHeader Version;
         private System.Windows.Forms.ListView PackageView;
         private System.Windows.Forms.ToolStripMenuItem InstallZipBtn;
+        private System.Windows.Forms.ToolStripMenuItem InstallZipWebBtn;
     }
 }
 

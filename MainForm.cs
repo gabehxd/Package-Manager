@@ -35,8 +35,6 @@ namespace Package_Manager
                         PopulateMenu();
                         InstallBtn.Enabled = true;
                         InstallWebBtn.Enabled = true;
-                        LockPkgsBtn.Enabled = true;
-                        UnlockPkgsBtn.Enabled = true;
                     };
                     Invoke(inv);
                 };
@@ -49,8 +47,6 @@ namespace Package_Manager
                         PackageView.Items.Clear();
                         InstallBtn.Enabled = false;
                         InstallWebBtn.Enabled = false;
-                        LockPkgsBtn.Enabled = false;
-                        UnlockPkgsBtn.Enabled = false;
 
                     };
                     Invoke(inv);
@@ -144,8 +140,6 @@ namespace Package_Manager
             InstallBtn.Enabled = true;
             InstallZipBtn.Enabled = true;
             InstallWebBtn.Enabled = true;
-            LockPkgsBtn.Enabled = true;
-            UnlockPkgsBtn.Enabled = true;
         }
 
         private void AutoLocBtn_Click(object sender, EventArgs e)
@@ -153,8 +147,6 @@ namespace Package_Manager
             InstallBtn.Enabled = false;
             InstallWebBtn.Enabled = false;
             InstallZipBtn.Enabled = false;
-            LockPkgsBtn.Enabled = false;
-            UnlockPkgsBtn.Enabled = false;
             Packages = new Dictionary<Package, FileInfo>();
             PackageView.Items.Clear();
             SDService.Start();
@@ -195,6 +187,7 @@ namespace Package_Manager
 
         private void PopulateMenu()
         {
+            PackageView.Items.Clear();
             DirectoryInfo PackagesDirectory = GetCurrentDrive().GetDirectory("FM").GetDirectory("Packages");
             Dictionary<Package, FileInfo> tmp = new Dictionary<Package, FileInfo>();
             if (!PackagesDirectory.Exists)
@@ -202,6 +195,7 @@ namespace Package_Manager
                 PackagesDirectory.Create();
                 return;
             }
+
             foreach (FileInfo file in PackagesDirectory.EnumerateFiles("*.json"))
             {
                 Package pck = JsonConvert.DeserializeObject<Package>(file.ReadAllText());
@@ -236,7 +230,7 @@ namespace Package_Manager
 
             Package.Value.Delete();
             Packages.Remove(Package.Key);
-            PackageView.Items.RemoveAt(PackageView.SelectedIndices[0]);
+            PackageView.Items.RemoveByKey(Package.Key.name);
             MessageBox.Show("Package Removed!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -349,7 +343,7 @@ namespace Package_Manager
             FileInfo PackageFile;
             using (WebClient wc = new WebClient())
             {
-                PackageFile = new DirectoryInfo(Path.GetTempPath()).GetFile(uri.Segments.Last());
+                PackageFile = new DirectoryInfo(Path.GetTempPath()).GetDirectory("FM").GetFile(uri.Segments.Last());
                 if (PackageFile.Exists) PackageFile.Delete();
                 try
                 {
@@ -365,26 +359,6 @@ namespace Package_Manager
             Install(PackageFile);
         }
 
-        private void LockPkgsBtn_Click(object sender, EventArgs e)
-        {
-            foreach (Package p in Packages.Keys)
-                foreach (string file in p.files)
-                    GetCurrentDrive().GetFile(file).IsReadOnly = true;
-
-            foreach (FileInfo file in Packages.Values)
-                file.IsReadOnly = true;
-        }
-
-        private void UnlockPkgsBtn_Click(object sender, EventArgs e)
-        {
-            foreach (Package p in Packages.Keys)
-                foreach (string file in p.files)
-                    GetCurrentDrive().GetFile(file).IsReadOnly = false;
-
-            foreach (FileInfo file in Packages.Values)
-                file.IsReadOnly = false;
-        }
-
         private void InstallZipBtn_Click(object sender, EventArgs e)
         {
             FileInfo Zip;
@@ -397,6 +371,57 @@ namespace Package_Manager
                 if (PackageDialog.ShowDialog() != DialogResult.OK) return;
 
                 Zip = new FileInfo(PackageDialog.FileName);
+            }
+
+            using (QuickPackageCreation creation = new QuickPackageCreation(Zip))
+            {
+                if (creation.ShowDialog() != DialogResult.OK) return;
+
+                switch (CheckPackages(creation.Pkg, out Package Outdated))
+                {
+                    default:
+                    case -1:
+                        return;
+                    case 0:
+                        InstallPackage(creation.Pkg, Zip);
+                        return;
+                    case 1:
+                        RemovePackage(Packages.Single(p => p.Key.name == Outdated.name));
+                        InstallPackage(creation.Pkg, Zip);
+                        return;
+                }
+            }
+        }
+
+        private void InstallZipWebBtn_Click(object sender, EventArgs e)
+        {
+            string input = Interaction.InputBox("Input URL");
+            if (input == string.Empty) return;
+            Uri uri;
+            try
+            {
+                uri = new Uri(input);
+            }
+            catch
+            {
+                MessageBox.Show("Invalid URL", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            FileInfo Zip;
+            using (WebClient wc = new WebClient())
+            {
+                Zip = new DirectoryInfo(Path.GetTempPath()).GetDirectory("FM").GetFile(uri.Segments.Last());
+                try
+                {
+                    wc.DownloadFile(uri, Zip.FullName);
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Download Failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
 
             using (QuickPackageCreation creation = new QuickPackageCreation(Zip))
